@@ -1,0 +1,16 @@
+[project]
+name = "system-input-preprocessing"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11.9"
+dependencies = [
+    "beautifulsoup4>=4.14.2",
+    "docling>=2.55.1",
+]
+
+[dependency-groups]
+dev = [
+    "pre-commit>=4.3.0",
+    "ruff>=0.14.0",
+]
