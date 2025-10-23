@@ -1,17 +1,21 @@
 import argparse
 from docling.document_converter import DocumentConverter
+from bs4 import BeautifulSoup
 
 
-def convert_document(input_file):
-    # Convert the local document
+def convert_document(input_file, output_file):
+    # convert the local document
     converter = DocumentConverter()
     result = converter.convert(input_file)
-    return result
+    # add paragraph ids
+    html_result = result.document.export_to_html()
+    soup = BeautifulSoup(html_result, "html.parser")
+    paragraphs = soup.find_all("p")
+    for idx, p in enumerate(paragraphs):
+        p["id"] = f"p_{idx + 1}"
 
-
-def save_converted_document_as_html(result, output_file):
-    # Save the converted document as HTML
-    result.document.save_as_html(output_file)
+    with open(output_file, "w", encoding="utf-8") as f:
+        f.write(str(soup))
 
 
 if __name__ == "__main__":
@@ -22,8 +26,5 @@ if __name__ == "__main__":
     parser.add_argument("--output_file", help="Path to the output document file")
     args = parser.parse_args()
 
-    # Perform the conversion
-    result = convert_document(args.input_file)
-
-    # Save the converted document
-    save_converted_document_as_html(result, args.output_file)
+    # convert and save to html
+    convert_document(args.input_file, args.output_file)
