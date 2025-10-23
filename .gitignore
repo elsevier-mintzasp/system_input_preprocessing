@@ -1,3 +1,7 @@
+!data/docx/sample_manuscript.docx
+docx/
+html/
+json/
 .DS_Store
 # Byte-compiled / optimized / DLL files
 __pycache__/
