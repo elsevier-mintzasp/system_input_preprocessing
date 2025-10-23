@@ -3,7 +3,7 @@ import sys
 from pathlib import Path
 
 sys.path.append(str(Path(__file__).parent.parent))
-from find_references import find_last_paragraph_before_references
+from extraction import find_last_paragraph_before_references
 
 
 class TestFindLastParagraphBeforeReferences:
