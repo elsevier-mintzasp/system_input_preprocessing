@@ -52,6 +52,39 @@ def find_last_paragraph_before_references(html_content):
     return None
 
 
+def remove_paragraphs_after_id(data, target_id):
+    """
+    Remove all paragraphs after the one with the specified id.
+
+    Args:
+        data (dict): Dictionary containing 'paragraphs_to_review' list
+        target_id (str): The id to match
+
+    Returns:
+        dict: Modified dictionary with paragraphs after target_id removed
+    """
+    if "paragraphs_to_review" not in data:
+        return data
+
+    paragraphs = data["paragraphs_to_review"]
+
+    # Find the index of the paragraph with target_id
+    target_index = None
+    for i, paragraph in enumerate(paragraphs):
+        if paragraph.get("id") == target_id:
+            target_index = i
+            break
+
+    # If target_id not found, return original data
+    if target_index is None:
+        return data
+
+    # Keep only paragraphs up to and including the target
+    data["paragraphs_to_review"] = paragraphs[: target_index + 1]
+
+    return data
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Extract paragraphs for review from HTML."
@@ -63,6 +96,9 @@ if __name__ == "__main__":
     with open(args.input_file, "r", encoding="utf-8") as file:
         html_content = file.read()
     paragraphs = extract_all_paragraphs_from_body(html_content)
+    last_paragraph_id = find_last_paragraph_before_references(html_content)
+
+    review_data = remove_paragraphs_after_id(paragraphs, last_paragraph_id)
 
     with open(args.output_file, "w", encoding="utf-8") as out_file:
-        json.dump(paragraphs, out_file, ensure_ascii=False, indent=4)
+        json.dump(review_data, out_file, ensure_ascii=False, indent=4)
