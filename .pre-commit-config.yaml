@@ -13,3 +13,10 @@ repos:
         entry: uv run ruff check
         language: system
         types: [python]
+  - repo: local
+    hooks:
+      - id: pytest
+        name: Execute tests
+        entry: uv run pytest -v
+        language: system
+        files: "test_.*\\.py$"

@@ -1,2 +1,2 @@
-# cpld_processing
-Develop MVP for processing CPLD format files
+# System input preprocessing
+Convert HTML input for Manuscript Reviewer to JSON with paragraphs, ids, and sections.
