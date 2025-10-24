@@ -85,6 +85,27 @@ def remove_paragraphs_after_id(data, target_id):
     return data
 
 
+def remove_short_text_elements(data, min_length=50):
+    """
+    Remove paragraphs with text shorter than the specified length.
+
+    Args:
+        data (dict): Dictionary containing 'paragraphs_to_review' list
+        min_length (int): Minimum length of paragraph text to keep
+
+    Returns:
+        dict: Modified dictionary with short paragraphs removed
+    """
+    if "paragraphs_to_review" not in data:
+        return data
+
+    data["paragraphs_to_review"] = [
+        p for p in data["paragraphs_to_review"] if len(p.get("text", "")) >= min_length
+    ]
+
+    return data
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Extract paragraphs for review from HTML."
@@ -97,8 +118,12 @@ if __name__ == "__main__":
         html_content = file.read()
     paragraphs = extract_all_paragraphs_from_body(html_content)
     last_paragraph_id = find_last_paragraph_before_references(html_content)
+    if last_paragraph_id:
+        review_data = remove_paragraphs_after_id(paragraphs, last_paragraph_id)
+    else:
+        review_data = paragraphs
 
-    review_data = remove_paragraphs_after_id(paragraphs, last_paragraph_id)
+    review_data = remove_short_text_elements(review_data, min_length=50)
 
     with open(args.output_file, "w", encoding="utf-8") as out_file:
         json.dump(review_data, out_file, ensure_ascii=False, indent=4)
